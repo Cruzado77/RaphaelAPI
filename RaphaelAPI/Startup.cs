@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using RaphaelAPI.Data;
 
 namespace RaphaelAPI
 {
@@ -28,10 +30,9 @@ namespace RaphaelAPI
         {
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RaphaelAPI", Version = "v1" });
-            });
+
+            services.AddDbContext<ApiContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("ApiContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
