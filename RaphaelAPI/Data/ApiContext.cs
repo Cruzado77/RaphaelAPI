@@ -15,5 +15,6 @@ namespace RaphaelAPI.Data
         }
 
         public DbSet<Produto> produto { get; set; }
+        public DbSet<Compra> compra { get; set; }
     }
 }
