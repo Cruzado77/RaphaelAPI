@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RaphaelAPI.DTO;
 
 namespace RaphaelAPI.Models
 {
@@ -14,5 +15,9 @@ namespace RaphaelAPI.Models
         public Nullable<DateTime> data_last { get; set; }
         public float valor_last { get; set; }
 
+        public ProdutoDTO ProdutoToDTO ()
+        {
+            return new ProdutoDTO(this);
+        }
     }
 }

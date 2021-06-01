@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RaphaelAPI.Data;
 using RaphaelAPI.Models;
+using RaphaelAPI.DTO;
 
 namespace RaphaelAPI.Controllers
 {
@@ -23,9 +24,16 @@ namespace RaphaelAPI.Controllers
 
         // GET: api/Produtos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Produto>>> Getproduto()
+        public async Task<List<ProdutoDTO>> Getproduto()
         {
-            return await _context.produto.ToListAsync();
+            List<Produto> lista = await _context.produto.ToListAsync();
+            List<ProdutoDTO> listaDTO = new List<ProdutoDTO>();
+            foreach (Produto i in lista)
+            {
+                listaDTO.Add(i.ProdutoToDTO());
+                System.Console.WriteLine($"{listaDTO[0].qtde_estoque}, {listaDTO[0].nome}, {listaDTO[0].valor_unitario}");
+            }
+            return listaDTO;
         }
 
         // GET: api/Produtos/5
