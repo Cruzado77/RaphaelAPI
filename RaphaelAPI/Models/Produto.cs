@@ -15,6 +15,17 @@ namespace RaphaelAPI.Models
         public Nullable<DateTime> data_last { get; set; }
         public float valor_last { get; set; }
 
+
+        public Produto()
+        { }
+
+        public Produto(ProdutoDTO produto)
+        {
+            nome = produto.nome;
+            valor_unitario = produto.valor_unitario;
+            qtde_estoque = produto.qtde_estoque;
+        }
+        //Converte Produto para ProdutoDTO
         public ProdutoDTO ProdutoToDTO ()
         {
             return new ProdutoDTO(this);

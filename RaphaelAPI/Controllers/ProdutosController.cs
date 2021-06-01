@@ -23,16 +23,17 @@ namespace RaphaelAPI.Controllers
         }
 
         // GET: api/Produtos
+        // Lista nao detalhada, retorna ProdutoDTO
         [HttpGet]
-        public async Task<List<ProdutoDTO>> ListarProdutos()
+        public async Task<ActionResult<List<ProdutoDTO>>> ListarProdutos()
         {
             List<Produto> lista = await _context.produto.ToListAsync();
             List<ProdutoDTO> listaDTO = new List<ProdutoDTO>();
             foreach (Produto i in lista)
             {
                 listaDTO.Add(i.ProdutoToDTO());
-                System.Console.WriteLine($"{listaDTO[0].qtde_estoque}, {listaDTO[0].nome}, {listaDTO[0].valor_unitario}");
             }
+
             return listaDTO;
         }
 
@@ -51,7 +52,6 @@ namespace RaphaelAPI.Controllers
         }
 
         // PUT: api/Produtos/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> ModificarProduto(long id, Produto produto)
         {
@@ -82,14 +82,16 @@ namespace RaphaelAPI.Controllers
         }
 
         // POST: api/Produtos
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // O usuario posta ProdutoDTO, o banco guarda Produto!!!
         [HttpPost]
-        public async Task<ActionResult<Produto>> AdicionarProduto(Produto produto)
+        public async Task<ActionResult<Produto>> AdicionarProduto(ProdutoDTO produto)
         {
-            _context.produto.Add(produto);
+            var produtoAdicionado = new Produto(produto);
+            _context.produto.Add(produtoAdicionado);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduto", new { id = produto.Id }, produto);
+            //Se sucesso, retorna uma chamada a DetalharProduto com o Produto adicionado.
+            return CreatedAtAction("DetalharProduto", new { id = produtoAdicionado.Id }, produtoAdicionado);
         }
 
         // DELETE: api/Produtos/5
