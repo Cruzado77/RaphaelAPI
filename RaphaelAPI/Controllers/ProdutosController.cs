@@ -24,7 +24,7 @@ namespace RaphaelAPI.Controllers
 
         // GET: api/Produtos
         [HttpGet]
-        public async Task<List<ProdutoDTO>> Getproduto()
+        public async Task<List<ProdutoDTO>> ListarProdutos()
         {
             List<Produto> lista = await _context.produto.ToListAsync();
             List<ProdutoDTO> listaDTO = new List<ProdutoDTO>();
@@ -38,7 +38,7 @@ namespace RaphaelAPI.Controllers
 
         // GET: api/Produtos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Produto>> GetProduto(long id)
+        public async Task<ActionResult<Produto>> DetalharProduto(long id)
         {
             var produto = await _context.produto.FindAsync(id);
 
@@ -53,7 +53,7 @@ namespace RaphaelAPI.Controllers
         // PUT: api/Produtos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduto(long id, Produto produto)
+        public async Task<IActionResult> ModificarProduto(long id, Produto produto)
         {
             if (id != produto.Id)
             {
@@ -84,7 +84,7 @@ namespace RaphaelAPI.Controllers
         // POST: api/Produtos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Produto>> PostProduto(Produto produto)
+        public async Task<ActionResult<Produto>> AdicionarProduto(Produto produto)
         {
             _context.produto.Add(produto);
             await _context.SaveChangesAsync();
@@ -94,7 +94,7 @@ namespace RaphaelAPI.Controllers
 
         // DELETE: api/Produtos/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduto(long id)
+        public async Task<IActionResult> DeletarProduto(long id)
         {
             var produto = await _context.produto.FindAsync(id);
             if (produto == null)
