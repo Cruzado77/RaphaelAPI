@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RaphaelAPI.Data;
 using RaphaelAPI.Models;
+using RaphaelAPI.DTO;
 
 namespace RaphaelAPI.Controllers
 {
@@ -23,14 +24,21 @@ namespace RaphaelAPI.Controllers
 
         // GET: api/Compras
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Compra>>> Getcompra()
+        public async Task<ActionResult<IEnumerable<CompraDTO>>> Getcompra()
         {
-            return await _context.compra.ToListAsync();
+            List<Compra> lista = await _context.compra.ToListAsync();
+            List<CompraDTO> listaDTO = new List<CompraDTO>();
+            foreach (Compra i in lista)
+            {
+                listaDTO.Add(new CompraDTO(i));
+            }
+
+            return listaDTO;
         }
 
         // GET: api/Compras/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Compra>> GetCompra(int id)
+        public async Task<ActionResult<CompraDTO>> GetCompra(int id)
         {
             var compra = await _context.compra.FindAsync(id);
 
@@ -39,11 +47,10 @@ namespace RaphaelAPI.Controllers
                 return NotFound();
             }
 
-            return compra;
+            return new CompraDTO(compra);
         }
 
         // PUT: api/Compras/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCompra(int id, Compra compra)
         {
@@ -74,11 +81,13 @@ namespace RaphaelAPI.Controllers
         }
 
         // POST: api/Compras
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Compra>> PostCompra(Compra compra)
         {
             _context.compra.Add(compra);
+            //Adiciona cartao
+            _context.cartao.Add(compra.cartao);
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCompra", new { id = compra.Id }, compra);

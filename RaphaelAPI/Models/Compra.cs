@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RaphaelAPI.DTO;
 
 namespace RaphaelAPI.Models
 {
@@ -9,9 +10,12 @@ namespace RaphaelAPI.Models
     {
         public int Id { get; set; }
         public int produto_Id { get; set; }
-        public Produto produto { get; set; }
-        public string cartao_Id { get; set; } 
         public Cartao cartao { get; set; }
         public float valor { get; set; }
+
+        public CompraDTO CompraToDTO ()
+        {
+            return new CompraDTO(this);
+        }
     }
 }
