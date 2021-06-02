@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿/*
+    Copyright: RAPHAEL RODRIGUES DE SENA - 2021
+ */
+
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RaphaelAPI.Data;
 using RaphaelAPI.Models;
-using RaphaelAPI.DTO;
 
 namespace RaphaelAPI.Controllers
 {

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/*
+    Copyright: RAPHAEL RODRIGUES DE SENA - 2021
+ */
+
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RaphaelAPI.Models
 {

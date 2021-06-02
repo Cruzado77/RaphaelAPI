@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿/*
+    Copyright: RAPHAEL RODRIGUES DE SENA - 2021
+ */
+
+using System;
 using RaphaelAPI.DTO;
 
 namespace RaphaelAPI.Models

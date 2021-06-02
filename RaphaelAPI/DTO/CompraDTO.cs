@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿/*
+    Copyright: RAPHAEL RODRIGUES DE SENA - 2021
+ */
+
+using System.Collections.Generic;
 using RaphaelAPI.Models;
 
 namespace RaphaelAPI.DTO
