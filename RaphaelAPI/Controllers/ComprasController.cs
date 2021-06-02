@@ -3,7 +3,6 @@
  */
 
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -32,6 +31,7 @@ namespace RaphaelAPI.Controllers
         {
             try
             {
+                //Validar dados de compra e cartao de credito
                 if(compra.IsInvalid())
                 {
                     throw new ArgumentException();
@@ -50,7 +50,9 @@ namespace RaphaelAPI.Controllers
 
                 HttpClient client = new HttpClient();
                 //Faz uma chamada a API Pagamentos
-                HttpResponseMessage response = await client.PostAsJsonAsync("https://localhost:8080/api/pagamento/compras/", compra);
+                HttpResponseMessage response = await client.
+                    PostAsJsonAsync("https://localhost:8080/api/pagamento/compras/", compra);
+
                 response.EnsureSuccessStatusCode();
 
                 // Le JSON retornado da API para pagamento
@@ -59,17 +61,25 @@ namespace RaphaelAPI.Controllers
 
                 if (pagamento.estado == "APROVADO")
                 {
-                    //Modifica produto
-                    _context.Entry(produto).State = EntityState.Modified;
-                    //Adiciona compra
-                    //_context.compra.Add(compra);
+                    //Modifica produto ou exclui se não houver mais em estoque
+                    if (produto.qtde_estoque == 0)
+                    {
+                        _context.Remove(produto);
+                    }
+                    else
+                    {
+                        _context.Entry(produto).State = EntityState.Modified;
+                    }
+
+                    //Adiciona apenas compra, sem entidades relacionadas!
                     _context.Entry(compra).State = EntityState.Added;
+
                     //Adiciona cartao se necessario
-                    Cartao cart = await _context.cartao.FindAsync(compra.cartao.numero);
-                    if (cart == null)
+                    if (await _context.cartao.FindAsync(compra.cartao.numero) == null)
                     {
                         _context.cartao.Add(compra.cartao);
                     }
+
                     await _context.SaveChangesAsync();
 
                     return compra;
