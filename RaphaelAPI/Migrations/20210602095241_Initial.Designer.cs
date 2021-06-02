@@ -10,7 +10,7 @@ using RaphaelAPI.Data;
 namespace RaphaelAPI.Migrations
 {
     [DbContext(typeof(ApiContext))]
-    [Migration("20210602012143_Initial")]
+    [Migration("20210602095241_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

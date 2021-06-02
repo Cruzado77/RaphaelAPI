@@ -62,10 +62,14 @@ namespace RaphaelAPI.Controllers
                     //Modifica produto
                     _context.Entry(produto).State = EntityState.Modified;
                     //Adiciona compra
-                    _context.compra.Add(compra);
-                    //Adiciona cartao
-                    _context.cartao.Add(compra.cartao);
-
+                    //_context.compra.Add(compra);
+                    _context.Entry(compra).State = EntityState.Added;
+                    //Adiciona cartao se necessario
+                    Cartao cart = await _context.cartao.FindAsync(compra.cartao.numero);
+                    if (cart == null)
+                    {
+                        _context.cartao.Add(compra.cartao);
+                    }
                     await _context.SaveChangesAsync();
 
                     return compra;

@@ -41,7 +41,7 @@ namespace RaphaelAPI.Models
 
         public bool IsInvalid()
         {
-            return (cartao == null) || ((qtde_comprada <= 0) || cartao.IsInvalid());
+            return (cartao == null) || (qtde_comprada <= 0) || cartao.IsInvalid();
         }
     }
 }

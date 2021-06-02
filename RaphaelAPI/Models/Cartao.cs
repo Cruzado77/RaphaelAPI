@@ -2,6 +2,7 @@
     Copyright: RAPHAEL RODRIGUES DE SENA - 2021
  */
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace RaphaelAPI.Models
