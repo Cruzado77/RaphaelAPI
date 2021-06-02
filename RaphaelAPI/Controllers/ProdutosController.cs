@@ -74,6 +74,10 @@ namespace RaphaelAPI.Controllers
         {
             try
             {
+                if(produto.IsInvalid())
+                {
+                    throw new ArgumentException();
+                }
                 var produtoAdicionado = new Produto(produto);
                 _context.produto.Add(produtoAdicionado);
                 await _context.SaveChangesAsync();
@@ -85,15 +89,13 @@ namespace RaphaelAPI.Controllers
             {
                 return StatusCode(412);
             }
-
-            return BadRequest();
             
         }
 
         // PUT: api/Produtos/5
         //Resposta PUT desativada em producao
         //[HttpPut("{id}")]
-        public async Task<IActionResult> ModificarProduto(int id, Produto produto)
+        protected async Task<IActionResult> ModificarProduto(int id, Produto produto)
         {
             if (id != produto.Id)
             {

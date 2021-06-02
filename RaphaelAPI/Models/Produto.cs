@@ -31,5 +31,6 @@ namespace RaphaelAPI.Models
         {
             return new ProdutoDTO(this);
         }
+
     }
 }

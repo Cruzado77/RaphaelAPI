@@ -38,5 +38,12 @@ namespace RaphaelAPI.Models
 
             return 0;
         }
+
+        public bool IsInvalid()
+        {
+            return (produto_Id <= 0) || (cartao == null) 
+                || (valor <= 0) || (qtde_comprada <= 0) 
+                    || cartao.IsInvalid();
+        }
     }
 }

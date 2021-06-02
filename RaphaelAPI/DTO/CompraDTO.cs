@@ -21,15 +21,5 @@ namespace RaphaelAPI.DTO
             produto_Id = compra.produto_Id;
             valor = compra.valor;
         }
-
-        public List<CompraDTO> ProdutosToDTOList (List<Compra> compras)
-        {
-            List<CompraDTO> result = new List<CompraDTO>();
-            foreach(Compra c in compras)
-            {
-                result.Add(new CompraDTO(c));
-            }
-            return result;
-        }
     }
 }

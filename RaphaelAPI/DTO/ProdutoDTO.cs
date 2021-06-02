@@ -22,13 +22,9 @@ namespace RaphaelAPI.DTO
             qtde_estoque = produto.qtde_estoque;
         }
 
-        public Produto DTOtoProduto ()
+        public bool IsInvalid()
         {
-            var produto = new Produto();
-            produto.nome = nome;
-            produto.valor_unitario = valor_unitario;
-            produto.qtde_estoque = qtde_estoque;
-            return produto;
+            return (nome == null) || (valor_unitario <= 0);
         }
     }
 }

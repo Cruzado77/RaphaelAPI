@@ -32,18 +32,17 @@ namespace RaphaelAPI.Controllers
         {
             try
             {
-                HttpClient client = new HttpClient();
+                if(compra.IsInvalid())
+                {
+                    throw new ArgumentException();
+                }
                 Produto produto = await _context.produto.FindAsync(compra.produto_Id);
                 if (produto == null)
                 {
                     return StatusCode(412);
                 }
 
-                if (compra.RealizarCompra(ref produto) != 0)
-                {
-                    return BadRequest();
-                }
-
+                HttpClient client = new HttpClient();
                 //Faz uma chamada a API Pagamentos
                 HttpResponseMessage response = await client.PostAsJsonAsync("https://localhost:8080/api/pagamento/compras/", compra);
                 response.EnsureSuccessStatusCode();
@@ -53,6 +52,11 @@ namespace RaphaelAPI.Controllers
 
                 if (pagamento.estado == "APROVADO")
                 {
+                    //Calcula compra
+                    if (compra.RealizarCompra(ref produto) != 0)
+                    {
+                        return BadRequest();
+                    }
                     //Modifica produto
                     _context.Entry(produto).State = EntityState.Modified;
                     //Adiciona compra
@@ -71,16 +75,6 @@ namespace RaphaelAPI.Controllers
             }
 
             return BadRequest();
-        }
-
-        private bool CreatedAtRoute()
-        {
-            throw new NotImplementedException();
-        }
-
-        private bool CompraExists(int id)
-        {
-            return _context.compra.Any(e => e.Id == id);
         }
     }
 }
