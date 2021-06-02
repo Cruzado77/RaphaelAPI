@@ -1,7 +1,7 @@
 ﻿/*
     Copyright: RAPHAEL RODRIGUES DE SENA - 2021
  */
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,28 +29,42 @@ namespace RaphaelAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ProdutoDTO>>> ListarProdutos()
         {
-            List<Produto> lista = await _context.produto.ToListAsync();
-            List<ProdutoDTO> listaDTO = new List<ProdutoDTO>();
-            foreach (Produto i in lista)
+            try
             {
-                listaDTO.Add(i.ProdutoToDTO());
-            }
+                List<Produto> lista = await _context.produto.ToListAsync();
+                List<ProdutoDTO> listaDTO = new List<ProdutoDTO>();
+                foreach (Produto i in lista)
+                {
+                    listaDTO.Add(i.ProdutoToDTO());
+                }
 
-            return listaDTO;
+                return Ok(listaDTO);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         // GET: api/Produtos/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Produto>> DetalharProduto(int id)
         {
-            var produto = await _context.produto.FindAsync(id);
-
-            if (produto == null)
+            try
             {
-                return NotFound();
-            }
+                var produto = await _context.produto.FindAsync(id);
 
-            return produto;
+                if (produto == null)
+                {
+                    return NotFound();
+                }
+
+                return produto;
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         // POST: api/Produtos
@@ -58,15 +72,26 @@ namespace RaphaelAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Produto>> AdicionarProduto(ProdutoDTO produto)
         {
-            var produtoAdicionado = new Produto(produto);
-            _context.produto.Add(produtoAdicionado);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var produtoAdicionado = new Produto(produto);
+                _context.produto.Add(produtoAdicionado);
+                await _context.SaveChangesAsync();
 
-            //Se sucesso, retorna uma chamada a DetalharProduto com o Produto adicionado.
-            return CreatedAtAction("DetalharProduto", new { id = produtoAdicionado.Id }, produtoAdicionado);
+                //Se sucesso, retorna uma chamada a DetalharProduto com o Produto adicionado.
+                return CreatedAtAction("DetalharProduto", new { id = produtoAdicionado.Id }, produtoAdicionado);
+            }
+            catch(ArgumentException)
+            {
+                return StatusCode(412);
+            }
+
+            return BadRequest();
+            
         }
 
         // PUT: api/Produtos/5
+        //Resposta PUT desativada em producao
         //[HttpPut("{id}")]
         public async Task<IActionResult> ModificarProduto(int id, Produto produto)
         {
@@ -100,16 +125,23 @@ namespace RaphaelAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarProduto(int id)
         {
-            var produto = await _context.produto.FindAsync(id);
-            if (produto == null)
+            try
             {
-                return NotFound();
+                var produto = await _context.produto.FindAsync(id);
+                if (produto == null)
+                {
+                    return StatusCode(412);
+                }
+
+                _context.produto.Remove(produto);
+                await _context.SaveChangesAsync();
+
+                return Ok();
             }
-
-            _context.produto.Remove(produto);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         private bool ProdutoExists(int id)
