@@ -42,6 +42,12 @@ namespace RaphaelAPI.Controllers
                     return StatusCode(412);
                 }
 
+                //Calcula compra
+                if (compra.RealizarCompra(ref produto) != 0)
+                {
+                    return BadRequest();
+                }
+
                 HttpClient client = new HttpClient();
                 //Faz uma chamada a API Pagamentos
                 HttpResponseMessage response = await client.PostAsJsonAsync("https://localhost:8080/api/pagamento/compras/", compra);
@@ -50,13 +56,9 @@ namespace RaphaelAPI.Controllers
                 // Le JSON retornado da API para pagamento
                 Pagamento pagamento = await response.Content.ReadAsAsync<Pagamento>();
 
+
                 if (pagamento.estado == "APROVADO")
                 {
-                    //Calcula compra
-                    if (compra.RealizarCompra(ref produto) != 0)
-                    {
-                        return BadRequest();
-                    }
                     //Modifica produto
                     _context.Entry(produto).State = EntityState.Modified;
                     //Adiciona compra
