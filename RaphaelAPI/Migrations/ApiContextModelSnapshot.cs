@@ -54,6 +54,9 @@ namespace RaphaelAPI.Migrations
                     b.Property<int>("produto_Id")
                         .HasColumnType("int");
 
+                    b.Property<int>("qtde_comprada")
+                        .HasColumnType("int");
+
                     b.Property<float>("valor")
                         .HasColumnType("real");
 
@@ -66,9 +69,9 @@ namespace RaphaelAPI.Migrations
 
             modelBuilder.Entity("RaphaelAPI.Models.Produto", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime?>("data_last")

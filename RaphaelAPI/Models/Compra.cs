@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RaphaelAPI.DTO;
+using RaphaelAPI.Data;
 
 namespace RaphaelAPI.Models
 {
@@ -12,10 +13,30 @@ namespace RaphaelAPI.Models
         public int produto_Id { get; set; }
         public Cartao cartao { get; set; }
         public float valor { get; set; }
+        public int qtde_comprada { get; set; }
 
         public CompraDTO CompraToDTO ()
         {
             return new CompraDTO(this);
+        }
+
+        //Produto por referencia, modificação em qtde_estoque, data_last e valor_last
+        public int RealizarCompra(ref Produto produto)
+        {
+            if(qtde_comprada <= produto.qtde_estoque)
+            {
+                produto.qtde_estoque -= qtde_comprada;
+                valor = produto.valor_unitario * qtde_comprada;
+                produto.valor_last = valor;
+                //Data Atual
+                produto.data_last = DateTime.Now;
+            }
+            else
+            {
+                return -1;
+            }
+
+            return 0;
         }
     }
 }

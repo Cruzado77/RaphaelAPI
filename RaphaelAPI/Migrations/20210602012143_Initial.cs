@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RaphaelAPI.Migrations
 {
-    public partial class CompraCartao : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,6 +23,23 @@ namespace RaphaelAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "produto",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    valor_unitario = table.Column<float>(type: "real", nullable: false),
+                    qtde_estoque = table.Column<int>(type: "int", nullable: false),
+                    data_last = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    valor_last = table.Column<float>(type: "real", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_produto", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "compra",
                 columns: table => new
                 {
@@ -29,7 +47,8 @@ namespace RaphaelAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     produto_Id = table.Column<int>(type: "int", nullable: false),
                     cartaonumero = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    valor = table.Column<float>(type: "real", nullable: false)
+                    valor = table.Column<float>(type: "real", nullable: false),
+                    qtde_comprada = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,6 +71,9 @@ namespace RaphaelAPI.Migrations
         {
             migrationBuilder.DropTable(
                 name: "compra");
+
+            migrationBuilder.DropTable(
+                name: "produto");
 
             migrationBuilder.DropTable(
                 name: "cartao");

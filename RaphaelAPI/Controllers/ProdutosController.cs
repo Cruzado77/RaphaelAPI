@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RaphaelAPI.Data;
@@ -39,7 +37,7 @@ namespace RaphaelAPI.Controllers
 
         // GET: api/Produtos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Produto>> DetalharProduto(long id)
+        public async Task<ActionResult<Produto>> DetalharProduto(int id)
         {
             var produto = await _context.produto.FindAsync(id);
 
@@ -51,9 +49,22 @@ namespace RaphaelAPI.Controllers
             return produto;
         }
 
+        // POST: api/Produtos
+        // O usuario posta ProdutoDTO, o banco guarda Produto!!!
+        [HttpPost]
+        public async Task<ActionResult<Produto>> AdicionarProduto(ProdutoDTO produto)
+        {
+            var produtoAdicionado = new Produto(produto);
+            _context.produto.Add(produtoAdicionado);
+            await _context.SaveChangesAsync();
+
+            //Se sucesso, retorna uma chamada a DetalharProduto com o Produto adicionado.
+            return CreatedAtAction("DetalharProduto", new { id = produtoAdicionado.Id }, produtoAdicionado);
+        }
+
         // PUT: api/Produtos/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> ModificarProduto(long id, Produto produto)
+        //[HttpPut("{id}")]
+        public async Task<IActionResult> ModificarProduto(int id, Produto produto)
         {
             if (id != produto.Id)
             {
@@ -81,22 +92,9 @@ namespace RaphaelAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Produtos
-        // O usuario posta ProdutoDTO, o banco guarda Produto!!!
-        [HttpPost]
-        public async Task<ActionResult<Produto>> AdicionarProduto(ProdutoDTO produto)
-        {
-            var produtoAdicionado = new Produto(produto);
-            _context.produto.Add(produtoAdicionado);
-            await _context.SaveChangesAsync();
-
-            //Se sucesso, retorna uma chamada a DetalharProduto com o Produto adicionado.
-            return CreatedAtAction("DetalharProduto", new { id = produtoAdicionado.Id }, produtoAdicionado);
-        }
-
         // DELETE: api/Produtos/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarProduto(long id)
+        public async Task<IActionResult> DeletarProduto(int id)
         {
             var produto = await _context.produto.FindAsync(id);
             if (produto == null)
@@ -110,7 +108,7 @@ namespace RaphaelAPI.Controllers
             return NoContent();
         }
 
-        private bool ProdutoExists(long id)
+        private bool ProdutoExists(int id)
         {
             return _context.produto.Any(e => e.Id == id);
         }
